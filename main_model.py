@@ -9,10 +9,14 @@ from sklearn.preprocessing import StandardScaler
 # 데이터
 housing = fetch_california_housing(as_frame=True).frame
 
+# 개선 1 : eda에서 확인한 MedHouseVal 상한선 5.0에 다수 분포된 이상치 제거
+housing_clean = housing[housing['MedHouseVal']<5.0]
+
 # 데이터 분리(학습/정답)
 # eda에서 확인한 중복 변수 제거 할당
-X = housing.drop(columns=['MedHouseVal', 'AveBedrms'])
-y = housing['MedHouseVal']
+# 개선 1 : housing -> housing_clean
+X = housing_clean.drop(columns=['MedHouseVal', 'AveBedrms'])
+y = housing_clean['MedHouseVal']
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42)
@@ -34,6 +38,6 @@ mae=mean_absolute_error(y_test, y_pred)
 rmse=root_mean_squared_error(y_test, y_pred)
 r2=r2_score(y_test, y_pred)
 
-print(mae)
-print(rmse)
-print(r2)
+print(f"R2   : {r2:.4f}")
+print(f"MAE  : {mae:.4f}")
+print(f"RMSE : {rmse:.4f}")
