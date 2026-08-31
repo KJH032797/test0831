@@ -11,8 +11,17 @@ housing = fetch_california_housing(as_frame=True).frame
 # 개선 1 : eda에서 확인한 MedHouseVal 상한선 5.0에 다수 분포된 이상치 제거
 housing_clean = housing[housing['MedHouseVal']<5.0].copy()
 
+# 개선 3
+# (인구/가구) 사람 수에 관련된 변수 묶음
+# (방 개수/가구) 주택 쾌적도 - 집값에 연결되는 개념 변수 묶음
+housing_clean['Households'] = housing_clean['Population'] / housing_clean['AveOccup']
+housing_clean['Rooms_per_Person'] = housing_clean['AveRooms'] / housing_clean['AveOccup']
+
+
 # 개선 2 : eda에서 확인한 편향치 큰 4개 변수 처리
-skew_cols = ['MedInc','AveRooms','Population','AveOccup']
+# 개선 3 : 위에서 처리한 파생변수는 모두 편향치가 큰 변수였기에 추가
+skew_cols = ['MedInc','AveRooms','Population','AveOccup',
+             'Households','Rooms_per_Person']
 for col in skew_cols:
     housing_clean[col] = np.log1p(housing_clean[col])
 
