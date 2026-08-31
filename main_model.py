@@ -47,10 +47,11 @@ m.fit(X_train_scaled, y_train)
 y_pred = m.predict(X_test_scaled)
 
 # 평가
+r2=r2_score(y_test, y_pred)
 mae=mean_absolute_error(y_test, y_pred)
 rmse=root_mean_squared_error(y_test, y_pred)
-r2=r2_score(y_test, y_pred)
 
+
+print(f"R2   : {r2:.4f}")
 print(f"MAE  : {mae:.4f}")
 print(f"RMSE : {rmse:.4f}")
-print(f"R2   : {r2:.4f}")
