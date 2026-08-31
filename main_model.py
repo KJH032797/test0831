@@ -8,9 +8,13 @@ from sklearn.preprocessing import StandardScaler
 
 # 데이터
 housing = fetch_california_housing(as_frame=True).frame
-
 # 개선 1 : eda에서 확인한 MedHouseVal 상한선 5.0에 다수 분포된 이상치 제거
-housing_clean = housing[housing['MedHouseVal']<5.0]
+housing_clean = housing[housing['MedHouseVal']<5.0].copy()
+
+# 개선 2 : eda에서 확인한 편향치 큰 4개 변수 처리
+skew_cols = ['MedInc','AveRooms','Population','AveOccup']
+for col in skew_cols:
+    housing_clean[col] = np.log1p(housing_clean[col])
 
 # 데이터 분리(학습/정답)
 # eda에서 확인한 중복 변수 제거 할당
@@ -38,6 +42,6 @@ mae=mean_absolute_error(y_test, y_pred)
 rmse=root_mean_squared_error(y_test, y_pred)
 r2=r2_score(y_test, y_pred)
 
-print(f"R2   : {r2:.4f}")
 print(f"MAE  : {mae:.4f}")
 print(f"RMSE : {rmse:.4f}")
+print(f"R2   : {r2:.4f}")

@@ -14,7 +14,15 @@ housing.to_csv('california_housing.csv', index=False)
 
 # 정보 확인(shape / describe)
 # print(housing.shape)
-# print(housing.describe())
+# 개선 2를 위한 정보 확인(편향치 확인)
+# describe() -> 생략 없이 표기
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', 1000)
+print(housing.describe())
+# 개선 2 : 위에서 확인한 평균<->최댓값 격차 큰 변수 편향치 확인
+skew_features = housing[['MedInc','AveRooms','Population','AveOccup']].skew()
+print(skew_features)
 
 # 결측치 확인
 # housing.info()
@@ -29,8 +37,8 @@ mi_scores = mutual_info_regression(X, y, random_state=42)
 # 높은 순 정렬
 mi_scores = (pd.Series(mi_scores, index=X.columns, name='MI scores')
              .sort_values(ascending=False))
-
-print(mi_scores.head(10))
+# print()
+# print(mi_scores.head(10))
 
 # 2. 중복 변수 확인
 # 수치형 변수 상관계수 절대값
@@ -42,8 +50,8 @@ high_corr = upper_tri.stack()[upper_tri.stack() >= 0.8]
 
 # 방/침실 수 중복 노이즈 확인
 # 위도/경도는 서로 영향치가 높지만 하나만 해서는 위치값으로 의미가 없음.
-print()
-print(high_corr)
+# print()
+# print(high_corr)
 
 # 3. 가격 분포 히스토그램
 plt.figure(figsize=(10, 5))
@@ -71,4 +79,4 @@ axes[1].set_ylabel('위도 (34:남 / 42:북)')
 
 plt.tight_layout()
 plt.savefig('주택_가격_상관계수.png')
-plt.show()
+# plt.show()
